@@ -1,38 +1,36 @@
 from random import choice
 
-RPS = ["ROCK", "PAPER", "SISSORS"]
+WIN, LOSS, TIE = "WIN", "LOSS", "TIE"
+BEATS = {"ROCK": "SCISSORS", "PAPER": "ROCK", "SCISSORS": "PAPER"}
+RPS = list(BEATS)
 
 
-def main():
-    user_ = user()
-    bot_ = bot()
-    print(f"{user_} ---> {bot_}")
-    print(logic(user_, bot_))
-
-
-def user():
-    while True:
-        user_inpt = input("> ")
-        if user_inpt in RPS:
-            return user_inpt
+def user(inpt):
+    inpt = inpt.strip().upper()
+    return inpt if inpt in RPS else None
 
 
 def bot():
     return choice(RPS)
 
 
-def logic(user, bot):
-    if user == bot:
-        return "tie"
-    elif (
-        (user == "PAPER" and bot == "ROCK")
-        or (user == "SISSORS" and bot == "PAPER")
-        or (user == "ROCK" and bot == "SISSORS")
-    ):
-        return "user won"
-    else:
-        return "user lost"
+def logic(user_choice, bot_choice):
+    if user_choice == bot_choice:
+        return TIE
+    return WIN if BEATS[user_choice] == bot_choice else LOSS
 
 
-if __name__ == "__main__":
-    main()
+class Game:
+    def __init__(self):
+        self.score = {WIN: 0, LOSS: 0, TIE: 0}
+
+    def play(self, user_choice):
+        if user_choice not in RPS:
+            raise ValueError("user_choice is not in RPS")
+        bot_choice = bot()
+        result = logic(user_choice, bot_choice)
+        self.score[result] += 1
+        return bot_choice, result
+
+    def reset(self):
+        self.score = {WIN: 0, LOSS: 0, TIE: 0}
