@@ -1,5 +1,6 @@
 from game import user, Game
 
+
 def main():
     game = Game()
     while True:
