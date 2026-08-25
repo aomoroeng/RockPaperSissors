@@ -1,12 +1,12 @@
-from game import Game
+from game import Game, RPS, WIN, LOSS, TIE
 import tkinter as tk
 
 root = tk.Tk()
 
 
 def center():
-    width = 250
-    height = 100
+    width = 300
+    height = 300
     screen_width = root.winfo_screenwidth()
     screen_height = root.winfo_screenheight()
     x = (screen_width - width) // 2
@@ -17,21 +17,32 @@ def center():
 root.geometry(center())
 root.title("RPS")
 game = Game()
-tk.Button(root, text="Rock", command=lambda: play_move("ROCK")).grid(row=0, column=3)
 
 
-def show_bot_choice(choice):
-    tk.Label(root, text=choice).grid(row=0, column=0)
+bot_var = tk.StringVar(value="-")
+result_var = tk.StringVar(value="---")
+score_var = tk.StringVar()
+
+tk.Label(root, textvariable=bot_var).pack()
+tk.Label(root, textvariable=result_var).pack()
+tk.Label(root, textvariable=score_var).pack()
 
 
-def show_result(result):
-    tk.Label(root, text=f"A {result} for you").grid(row=1, column=2)
+def show_score():
+    s = game.score
+    score_var.set(f"W:{s[WIN]} | L:{s[LOSS]} | T:{s[TIE]}")
 
 
 def play_move(move):
     bot_choice, result = game.play(move)
+    bot_var.set(f"bot: {bot_choice}")
+    result_var.set(f"it is a {result}")
+    show_score()
 
-    show_bot_choice(bot_choice), show_result(result)
+
+for move in RPS:
+    tk.Button(root, text=move.title(), command=lambda m=move: play_move(m)).pack()
+tk.Button(root, text="Reset", command=lambda: (show_score(), game.reset())).pack()
 
 
 root.mainloop()
