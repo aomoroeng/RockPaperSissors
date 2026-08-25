@@ -4,11 +4,18 @@ WIN, LOSS, TIE = "WIN", "LOSS", "TIE"
 BEATS = {"ROCK": "SCISSORS", "PAPER": "ROCK", "SCISSORS": "PAPER"}
 KEYS = {"r": "ROCK", "p": "PAPER", "s": "SCISSORS"}
 RPS = list(BEATS)
+if set(KEYS.values()) != set(BEATS):
+    raise ValueError(f"BEATS/KEYS mismatch | {set(KEYS.values()) ^ set(BEATS)}")
+
+def score_line(score):
+    return f"W:{score[WIN]} | L:{score[LOSS]} | T:{score[TIE]}"
 
 
 def user(inpt):
     inpt = inpt.strip().upper()
-    return inpt if inpt in RPS else None
+    if inpt in RPS:
+        return inpt
+    return KEYS.get(inpt.lower())
 
 
 def bot():

@@ -1,18 +1,16 @@
-from game import Game, RPS, WIN, LOSS, TIE, KEYS
+from game import Game, RPS, KEYS, score_line
 import tkinter as tk
 
 
 def main():
     root = tk.Tk()
-    app = App(root)
+    App(root)
     root.mainloop()
 
 
-def center(root, width=300, height=200):
-    screen_width = root.winfo_screenwidth()
-    screen_height = root.winfo_screenheight()
-    x = (screen_width - width) // 2
-    y = (screen_height - height) // 2
+def center(root, width=200, height=200):
+    x = (root.winfo_screenwidth() - width) // 2
+    y = (root.winfo_screenheight() - height) // 2
     return f"{width}x{height}+{x}+{y}"
 
 
@@ -25,11 +23,12 @@ class App:
         self.bot_var = tk.StringVar(value="-")
         self.result_var = tk.StringVar(value="---")
         self.score_var = tk.StringVar()
+
         for key, move in KEYS.items():
-            self.root.bind(f"<{key}>", lambda e, m=move: self.play_move(f"{m}"))
-        tk.Label(self.root, textvariable=self.bot_var).pack()
-        tk.Label(self.root, textvariable=self.result_var).pack()
-        tk.Label(self.root, textvariable=self.score_var).pack()
+            handler =  lambda e, m=move: self.play_move(m)
+            self.root.bind(f"<{key}>", handler)
+            self.root.bind(f"<{key.upper()}>", handler)
+
 
         for move in RPS:
             tk.Button(
@@ -40,11 +39,14 @@ class App:
             text="Reset",
             command=lambda: (self.game.reset(), self.show_score()),
         ).pack()
+
+        tk.Label(self.root, textvariable=self.bot_var).pack()
+        tk.Label(self.root, textvariable=self.result_var).pack()
+        tk.Label(self.root, textvariable=self.score_var).pack()
         self.show_score()
 
     def show_score(self):
-        s = self.game.score
-        self.score_var.set(f"W:{s[WIN]} | L:{s[LOSS]} | T:{s[TIE]}")
+        self.score_var.set(score_line(self.game.score))
 
     def play_move(self, move):
         bot_choice, result = self.game.play(move)

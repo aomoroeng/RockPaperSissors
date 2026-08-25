@@ -1,4 +1,4 @@
-from game import user, Game
+from game import user, Game, score_line
 
 
 def main():
@@ -9,11 +9,11 @@ def main():
         except (EOFError, KeyboardInterrupt):
             return
         if user_choice is None:
-            print("Pick ROCK, PAPER or SCISSORS")
+            print("Pick ROCK, PAPER or SCISSORS | (r,p,s) | ^c to quit")
             continue
         bot_choice, result = game.play(user_choice)
         print(f"{user_choice} ---> {bot_choice}: {result}")
-        print(game.score)
+        print(score_line(game.score))
 
 
 if __name__ == "__main__":
