@@ -2,6 +2,7 @@ from random import choice
 
 WIN, LOSS, TIE = "WIN", "LOSS", "TIE"
 BEATS = {"ROCK": "SCISSORS", "PAPER": "ROCK", "SCISSORS": "PAPER"}
+KEYS = {"r": "ROCK", "p": "PAPER", "s": "SCISSORS"}
 RPS = list(BEATS)
 
 
@@ -33,4 +34,4 @@ class Game:
         return bot_choice, result
 
     def reset(self):
-        self.score = {WIN: 0, LOSS: 0, TIE: 0}
+        self.score.update({WIN: 0, LOSS: 0, TIE: 0})
