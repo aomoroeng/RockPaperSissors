@@ -1,14 +1,26 @@
 from random import choice
 
+# CONSTANTS
 WIN, LOSS, TIE = "WIN", "LOSS", "TIE"
 BEATS = {"ROCK": "SCISSORS", "PAPER": "ROCK", "SCISSORS": "PAPER"}
 KEYS = {"r": "ROCK", "p": "PAPER", "s": "SCISSORS"}
+EMOJI = {"ROCK": "🪨", "PAPER": "📄", "SCISSORS": "✂️"}
 RPS = list(BEATS)
+
 if set(KEYS.values()) != set(BEATS):
     raise ValueError(f"BEATS/KEYS mismatch | {set(KEYS.values()) ^ set(BEATS)}")
+if set(EMOJI) != set(BEATS):
+    raise ValueError(f"EMOJI mismatch | {set(EMOJI) ^ set(BEATS)}")
+if set(BEATS.values()) != set(BEATS):  # add this — it's what would have caught your bug
+    raise ValueError(f"BEATS values mismatch | {set(BEATS.values()) ^ set(BEATS)}")
+
 
 def score_line(score):
     return f"W:{score[WIN]} | L:{score[LOSS]} | T:{score[TIE]}"
+
+
+def show(move):
+    return EMOJI[move]
 
 
 def user(inpt):
