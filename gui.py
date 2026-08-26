@@ -9,11 +9,11 @@ FG = "white"
 
 def main():
     root = tk.Tk()
-    app = App(root)
+    App(root)
     root.mainloop()
 
 
-def center(root, width=500, height=200):
+def center(root, width=700, height=300):
     x = (root.winfo_screenwidth() - width) // 2
     y = (root.winfo_screenheight() - height) // 2
     return f"{width}x{height}+{x}+{y}"
@@ -23,11 +23,11 @@ class App:
     def __init__(self, root):
         self.root = root
 
-        # set grid
-        self.root.columnconfigure((0, 1, 2), weight=1)
+        # grid
+        self.root.columnconfigure((0, 1, 2), weight=1, uniform="col")
         self.root.rowconfigure((0, 1), weight=1)
 
-        # set frames
+        # frames
         self.bot_frame = tk.Frame(self.root, bg=BG, padx=30, pady=30)
         self.bot_frame.grid(row=0, column=0)
 
@@ -43,28 +43,72 @@ class App:
 
         self.game = Game()
 
-        # set stringvars
-        self.bot_var = tk.StringVar(value="-")
+        # stringvars
+        self.bot_var = tk.StringVar(value="bot:  -  ")
         self.result_var = tk.StringVar(value="---")
         self.score_var = tk.StringVar()
 
+        # key_controls
         for key, move in KEYS.items():
             handler = lambda e, m=move: self.play_move(m)
             self.root.bind(f"<{key}>", handler)
             self.root.bind(f"<{key.upper()}>", handler)
 
+        # user_buttons
+        self.style = ttk.Style()
+        self.style.theme_use("clam")
+        self.style.configure(
+            "RPS.TButton",
+            background=BG,
+            foreground=FG,
+            borderwidth=0,
+            width=4,
+            focuscolor=BG,
+        )
+        self.style.map(
+            "RPS.TButton",
+            background=[("active", "#1C1C1C")],
+            foreground=[("active", FG)],
+        )
         for move in RPS:
-            tk.Button(
+            ttk.Button(
                 self.user_frame,
                 text=show(move),
                 command=lambda m=move: self.play_move(m),
-            ).grid()
+                style="RPS.TButton",
+            ).grid(pady=5)
 
-        tk.Button(self.root, text="Reset", command=self.reset).grid(row=1, column=1)
+        # reset_buttons
+        ttk.Button(
+            self.root, text="Reset", command=self.reset, style="RPS.TButton"
+        ).grid(row=1, column=1)
 
-        tk.Label(self.bot_frame, textvariable=self.bot_var, bg=BG, fg=FG).grid()
-        tk.Label(self.score_frame, textvariable=self.result_var, bg=BG, fg=FG).grid()
-        tk.Label(self.score_frame, textvariable=self.score_var, bg=BG, fg=FG).grid()
+        # labels
+        tk.Label(
+            self.bot_frame,
+            textvariable=self.bot_var,
+            bg=BG,
+            fg=FG,
+            width=12,
+            anchor="center",
+        ).grid()
+        tk.Label(
+            self.score_frame,
+            textvariable=self.result_var,
+            bg=BG,
+            fg=FG,
+            width=12,
+            anchor="center",
+        ).grid()
+        tk.Label(
+            self.score_frame,
+            textvariable=self.score_var,
+            bg=BG,
+            fg=FG,
+            width=16,
+            anchor="center",
+            font=("Menlo", 13),
+        ).grid()
         self.show_score()
 
     def show_score(self):
@@ -78,7 +122,7 @@ class App:
 
     def reset(self):
         self.game.reset()
-        self.bot_var.set("-----")
+        self.bot_var.set("bot:  -  ")
         self.result_var.set("---")
         self.show_score()
 

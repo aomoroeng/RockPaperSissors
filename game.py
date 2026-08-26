@@ -11,7 +11,7 @@ if set(KEYS.values()) != set(BEATS):
     raise ValueError(f"BEATS/KEYS mismatch | {set(KEYS.values()) ^ set(BEATS)}")
 if set(EMOJI) != set(BEATS):
     raise ValueError(f"EMOJI mismatch | {set(EMOJI) ^ set(BEATS)}")
-if set(BEATS.values()) != set(BEATS):  # add this — it's what would have caught your bug
+if set(BEATS.values()) != set(BEATS):
     raise ValueError(f"BEATS values mismatch | {set(BEATS.values()) ^ set(BEATS)}")
 
 
